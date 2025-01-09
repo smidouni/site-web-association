@@ -1,6 +1,7 @@
 // frontend/src/router/index.js
 
 import { createRouter, createWebHistory } from "vue-router";
+import { authState } from "../auth"; // Importer l'état d'authentification réactif
 
 // Import des vues
 import Home from "../views/Home.vue";
@@ -10,7 +11,12 @@ import Vote from "../views/Vote.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
-  { path: "/login", name: "Login", component: Login },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: { guest: true }, // Ajouter le meta field 'guest'
+  },
   {
     path: "/admin",
     name: "Admin",
@@ -39,12 +45,15 @@ const router = createRouter({
 
 // Navigation Guards
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const isLoggedIn = !!authState.token; // Utiliser l'état réactif
+  const role = authState.role;
 
-  if (to.meta.requiresAuth && !token) {
+  if (to.meta.requiresAuth && !isLoggedIn) {
     next({ name: "Login" });
   } else if (to.meta.requiresAdmin && role !== "admin") {
+    next({ name: "Home" });
+  } else if (to.meta.guest && isLoggedIn) {
+    // Si la route est réservée aux invités et que l'utilisateur est connecté
     next({ name: "Home" });
   } else {
     next();
