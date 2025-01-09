@@ -15,11 +15,11 @@ export default createVuetify({
       light: {
         dark: false,
         colors: {
-          background: "#f5f5f5",
-          surface: "#ffffff",
-          primary: "#6200ee",
-          secondary: "#03dac6",
-          error: "#b00020",
+          background: "#F5F5F5",
+          surface: "#FFFFFF",
+          primary: "#1E3A8A",
+          secondary: "#22D3EE",
+          error: "#E53E3E",
         },
       },
       dark: {
@@ -36,6 +36,6 @@ export default createVuetify({
   },
   icons: {
     defaultSet: "mdi",
-    // Suppression de la configuration des sets pour éviter l'import de 'mdi/js'
+
   },
 });
