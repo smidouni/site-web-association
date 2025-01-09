@@ -32,7 +32,7 @@ CREATE TABLE news (
 
 -- Insertion d'actualités d'exemple
 INSERT INTO news (title, content, image_url) VALUES
-('Bienvenue à MasterIM', 'Bienvenue sur le site de l association MasterIM. Nous sommes ravis de vous accueillir!', 'https://example.com/image1.jpg'),
+('Bienvenue à MasterIM', 'Bienvenue sur le site de l\'association MasterIM. Nous sommes ravis de vous accueillir!', 'https://example.com/image1.jpg'),
 ('Nouvelle Proposition', 'Nous avons une nouvelle proposition à voter. Veuillez consulter la page de vote pour plus de détails.', 'https://example.com/image2.jpg');
 
 -- Table des commentaires
@@ -49,7 +49,7 @@ CREATE TABLE comments (
 -- Insertion de commentaires d'exemple
 INSERT INTO comments (content, user_id, news_id) VALUES
 ('Superbe initiative!', 2, 1),
-('J ai hâte de voter pour la nouvelle proposition.', 3, 2);
+('J\'ai hâte de voter pour la nouvelle proposition.', 3, 2);
 
 -- Table des propositions de vote
 CREATE TABLE proposals (
