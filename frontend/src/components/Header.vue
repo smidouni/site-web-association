@@ -30,6 +30,10 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { authState, clearAuth } from '../auth'
+
 export default {
   name: 'Header',
   data() {

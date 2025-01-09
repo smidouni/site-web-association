@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios'
+import { setAuth } from '../auth'
 
 export default {
   name: 'Login',
@@ -55,9 +56,7 @@ export default {
           password: this.password,
         })
         const { token, role, userId } = response.data
-        localStorage.setItem('token', token)
-        localStorage.setItem('role', role || 'user')
-        localStorage.setItem('userId', userId)
+        setAuth(token, role || 'user', userId) // Mise à jour de l'état réactif
         this.$router.push('/')
       } catch (err) {
         this.error =
