@@ -1,31 +1,32 @@
 <template>
   <v-app-bar app color="primary" dark>
     <!-- Conteneur flex pour gérer l'alignement du logo et du texte -->
-    <div class="d-flex align-center">
-      <!-- Logo à gauche -->
-      <img
-        :src="logo"
-        alt="Logo"
-        class="logo mr-2"
-      />
-      <!-- Texte "M1 IM et IMDS" -->
-      <v-toolbar-title class="mr-0">M1 IM et IMDS</v-toolbar-title>
+    <v-container fluid>
+      <v-row class="align-center">
+        <!-- Conteneur du titre et des boutons Accueil / Inscription -->
+        <v-col class="d-flex align-center">
+          <!-- Logo à gauche -->
+          <img
+            :src="logo"
+            alt="Logo"
+            class="logo mr-2"
+          />
+          <!-- Texte "M1 IM et IMDS" -->
+          <v-toolbar-title class="mr-0">M1 IM et IMDS</v-toolbar-title>
 
-      <!-- Boutons Accueil et Inscription -->
-      <v-btn text to="/" aria-label="Accueil" class="ml-0">Accueil</v-btn>
-      <v-btn text to="/inscription" aria-label="Inscription" class="ml-0">Inscription</v-btn>
-    </div>
-
-    <!-- Spacer pour repousser les autres boutons à droite -->
-    <v-spacer></v-spacer>
-
-    <!-- Placer les boutons Vote, Admin, Logout à droite -->
-    <v-btn text to="/vote" v-if="isLoggedIn" aria-label="Vote">Vote</v-btn>
-    <v-btn text to="/admin" v-if="isAdmin" aria-label="Admin">Admin</v-btn>
-    <v-btn text @click="logout" v-if="isLoggedIn" aria-label="Logout">Logout</v-btn>
-
-    <!-- Bouton Login tout à droite -->
-    <v-btn text to="/login" v-if="!isLoggedIn" aria-label="Login">Login</v-btn>
+          <!-- Boutons Accueil et Inscription -->
+          <v-btn text to="/" aria-label="Accueil" class="ml-0">Accueil</v-btn>
+          <v-btn text to="/inscription" aria-label="Inscription" class="ml-0">Inscription</v-btn>
+        </v-col>
+        <!-- Conteneur des boutons Vote, Admin, Logout (aligné à droite) -->
+        <v-col class="d-flex justify-end align-center">
+          <v-btn text to="/vote" v-if="isLoggedIn" aria-label="Vote">Vote</v-btn>
+          <v-btn text to="/admin" v-if="isAdmin" aria-label="Admin">Admin</v-btn>
+          <v-btn text @click="logout" v-if="isLoggedIn" aria-label="Logout">Logout</v-btn>
+          <v-btn text to="/login" v-if="!isLoggedIn" aria-label="Login">Login</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-app-bar>
 </template>
 
