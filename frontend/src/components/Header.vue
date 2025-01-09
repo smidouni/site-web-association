@@ -24,23 +24,29 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { authState, clearAuth } from '../auth'
+
 export default {
   name: 'Header',
-  computed: {
-    isLoggedIn() {
-      return !!localStorage.getItem('token')
-    },
-    isAdmin() {
-      return localStorage.getItem('role') === 'admin'
-    },
-  },
-  methods: {
-    logout() {
-      localStorage.removeItem('token')
-      localStorage.removeItem('role')
-      localStorage.removeItem('userId')
-      this.$router.push('/login')
-    },
+  setup() {
+    const router = useRouter()
+
+    const isLoggedIn = computed(() => !!authState.token)
+    const isAdmin = computed(() => authState.role === 'admin')
+
+    const logout = () => {
+      clearAuth()
+      // Redirection après déconnexion
+      router.push('/login')
+    }
+
+    return {
+      isLoggedIn,
+      isAdmin,
+      logout,
+    }
   },
 }
 </script>
