@@ -20,28 +20,12 @@
 
     <!-- Bouton Login tout à droite -->
     <v-btn text to="/login" v-if="!isLoggedIn" aria-label="Login">Login</v-btn>
-
-    <!-- Bouton de thème sombre -->
-    <v-switch
-      v-model="isDarkTheme"
-      @change="toggleTheme"
-      label="Thème Sombre"
-      class="ml-4"
-      hide-details
-      inset
-      aria-label="Basculer le thème sombre"
-    ></v-switch>
   </v-app-bar>
 </template>
 
 <script>
 export default {
   name: 'Header',
-  data() {
-    return {
-      isDarkTheme: false,
-    }
-  },
   computed: {
     isLoggedIn() {
       return !!localStorage.getItem('token')
@@ -50,18 +34,7 @@ export default {
       return localStorage.getItem('role') === 'admin'
     },
   },
-  mounted() {
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      this.isDarkTheme = savedTheme === 'dark'
-      this.$vuetify.theme.dark = this.isDarkTheme
-    }
-  },
   methods: {
-    toggleTheme() {
-      this.$vuetify.theme.dark = this.isDarkTheme
-      localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light')
-    },
     logout() {
       localStorage.removeItem('token')
       localStorage.removeItem('role')
@@ -79,9 +52,5 @@ export default {
 
 .mr-0 {
   margin-right: 0px; /* Aucun espacement entre le texte et les éléments suivants */
-}
-
-.ml-4 {
-  margin-left: 16px; /* Marge pour le bouton de thème sombre */
 }
 </style>
