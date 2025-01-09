@@ -8,6 +8,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Admin from "../views/Admin.vue";
 import Vote from "../views/Vote.vue";
+import Inscription from "../views/Inscription.vue"; // Import Inscription view
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -28,6 +29,11 @@ const routes = [
     name: "Vote",
     component: Vote,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/inscription", // New route for Inscription
+    name: "Inscription",
+    component: Inscription,
   },
   // Route 404
   {
