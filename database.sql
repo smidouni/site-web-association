@@ -17,7 +17,9 @@ CREATE TABLE users (
 -- Insertion d'utilisateurs d'exemple
 -- Les mots de passe ont été générés avec bcrypt, niveau de salage 10
 INSERT INTO users (username, password, role, token) VALUES
-('admin', '$2b$10$EV406.40z/EqsL.2xquzYuTfsb47kJFKzS8tNmlq0sc2NdfQ5QhRy', 'admin', 'admin-token-123')
+('admin', '$2b$10$EV406.40z/EqsL.2xquzYuTfsb47kJFKzS8tNmlq0sc2NdfQ5QhRy', 'admin', 'admin-token-123'),
+('user1', '$2b$10$ExampleHashForUser1', 'user', 'user1-token-abc'),
+('user2', '$2b$10$ExampleHashForUser2', 'user', 'user2-token-def');
 
 -- Table des actualités
 CREATE TABLE news (
