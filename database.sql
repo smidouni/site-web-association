@@ -17,9 +17,7 @@ CREATE TABLE users (
 -- Insertion d'utilisateurs d'exemple
 -- Les mots de passe ont été générés avec bcrypt, niveau de salage 10
 INSERT INTO users (username, password, role, token) VALUES
-('admin', '$2b$10$EV406.40z/EqsL.2xquzYuTfsb47kJFKzS8tNmlq0sc2NdfQ5QhRy', 'admin', 'admin-token-123'),
-('user1', '$2b$10$ExampleHashForUser1', 'user', 'user1-token-abc'),
-('user2', '$2b$10$ExampleHashForUser2', 'user', 'user2-token-def');
+('admin', '$2b$10$EV406.40z/EqsL.2xquzYuTfsb47kJFKzS8tNmlq0sc2NdfQ5QhRy', 'admin', 'admin-token-123');
 
 -- Table des actualités
 CREATE TABLE news (
@@ -32,7 +30,7 @@ CREATE TABLE news (
 
 -- Insertion d'actualités d'exemple
 INSERT INTO news (title, content, image_url) VALUES
-('Bienvenue à MasterIM', 'Bienvenue sur le site de l''association MasterIM. Nous sommes ravis de vous accueillir!', 'https://example.com/image1.jpg'),
+('Bienvenue à MasterIM', 'Bienvenue sur le site de l association MasterIM. Nous sommes ravis de vous accueillir!', 'https://example.com/image1.jpg'),
 ('Nouvelle Proposition', 'Nous avons une nouvelle proposition à voter. Veuillez consulter la page de vote pour plus de détails.', 'https://example.com/image2.jpg');
 
 -- Table des commentaires
@@ -49,7 +47,7 @@ CREATE TABLE comments (
 -- Insertion de commentaires d'exemple
 INSERT INTO comments (content, user_id, news_id) VALUES
 ('Superbe initiative!', 2, 1),
-('J''ai hâte de voter pour la nouvelle proposition.', 3, 2);
+('J ai hâte de voter pour la nouvelle proposition.', 3, 2);
 
 -- Table des propositions de vote
 CREATE TABLE proposals (
