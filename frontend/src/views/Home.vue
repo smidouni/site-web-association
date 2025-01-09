@@ -2,7 +2,7 @@
 
 <template>
   <v-container>
-    <h1>Bienvenue à l'association MasterIM</h1>
+    <h1>Bienvenue à l'association Master IM et IMDS</h1>
     <p>
       Nous sommes une association dynamique dédiée à soutenir les étudiants des
       masters Informatique et Mathématiques & Data Science.
