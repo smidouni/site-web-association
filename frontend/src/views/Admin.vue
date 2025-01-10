@@ -3,20 +3,16 @@
     <h1>Administration</h1>
 
     <v-tabs v-model="tab" background-color="primary" dark>
-      <v-tab>Gestion des Utilisateurs</v-tab>
-      <v-tab>Ajouter une Actualité</v-tab>
+      <v-tab :value="0">Ajouter une Actualité</v-tab>
+      <v-tab :value="1">Gestion des Utilisateurs</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
       <!-- Gestion des Utilisateurs -->
-      <v-tab-item>
+      <v-tab-item :value="0" v-if="tab === 1">
         <v-card class="pa-4">
           <v-btn color="primary" class="mb-4" @click="fetchUsers">Charger les utilisateurs</v-btn>
-          <v-alert
-            v-if="userMessage"
-            :type="userError ? 'error' : 'success'"
-            class="mt-4"
-          >
+          <v-alert v-if="userMessage" :type="userError ? 'error' : 'success'" class="mt-4">
             {{ userMessage }}
           </v-alert>
           <v-data-table
@@ -33,7 +29,7 @@
       </v-tab-item>
 
       <!-- Ajouter une Actualité -->
-      <v-tab-item>
+      <v-tab-item :value="1" v-if="tab === 0">
         <v-card class="pa-4">
           <v-form ref="newsForm" @submit.prevent="addNews">
             <v-text-field
@@ -56,32 +52,12 @@
             ></v-text-field>
             <v-btn type="submit" color="success" :loading="loading">Ajouter</v-btn>
           </v-form>
-          <v-alert
-            v-if="newsMessage"
-            :type="newsError ? 'error' : 'success'"
-            class="mt-4"
-          >
+          <v-alert v-if="newsMessage" :type="newsError ? 'error' : 'success'" class="mt-4">
             {{ newsMessage }}
           </v-alert>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
-
-    <!-- Dialog de confirmation -->
-    <v-dialog v-model="dialog" max-width="500">
-      <v-card>
-        <v-card-title class="headline">Confirmer la Suppression</v-card-title>
-        <v-card-text>
-          Êtes-vous sûr de vouloir supprimer l'utilisateur
-          "{{ selectedUser?.username }}" ?
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialog = false">Annuler</v-btn>
-          <v-btn color="red darken-1" text @click="deleteUser">Supprimer</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -92,16 +68,16 @@ export default {
   name: "Admin",
   data() {
     return {
-      tab: null,
-      users: [], // Array to store user data
+      tab: 0, // Définit l'onglet actif par défaut
+      users: [],
       userHeaders: [
         { text: "ID", value: "id" },
         { text: "Nom d'utilisateur", value: "username" },
         { text: "Rôle", value: "role" },
         { text: "Actions", value: "actions", sortable: false },
       ],
-      selectedUser: null, // Selected user for deletion
-      dialog: false, // Dialog state for delete confirmation
+      selectedUser: null,
+      dialog: false,
       userMessage: "",
       userError: false,
       newsTitle: "",
@@ -202,9 +178,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.headline {
-  font-weight: bold;
-}
-</style>
