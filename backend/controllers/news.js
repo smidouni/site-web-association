@@ -1,6 +1,7 @@
 // backend/controllers/news.js
 
 const pool = require("../config/db");
+const path = require("path");
 
 // Fetch all news
 const getAllNews = async (req, res) => {
@@ -16,7 +17,19 @@ const getAllNews = async (req, res) => {
 
 // Create a news
 const createNews = async (req, res) => {
-  const { title, content, image_url } = req.body;
+  const { title, content } = req.body;
+  let image_url = null;
+
+  if (req.file) {
+    // Construct the URL to access the uploaded image
+    image_url = `${req.protocol}://${req.get("host")}/uploads/${
+      req.file.filename
+    }`;
+  }
+
+  if (!title || !content) {
+    return res.status(400).json({ message: "Titre et contenu requis." });
+  }
 
   try {
     await pool.query(

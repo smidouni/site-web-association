@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cors = require("cors");
+const path = require("path"); // Added for static files
 const userRoutes = require("./routes/users");
 const newsRoutes = require("./routes/news");
 const commentRoutes = require("./routes/comments");
@@ -27,6 +28,9 @@ app.use(
 
 // Middleware pour parser les requêtes JSON
 app.use(bodyParser.json());
+
+// Serve static files from 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api/users", userRoutes);

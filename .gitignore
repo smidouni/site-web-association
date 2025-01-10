@@ -58,3 +58,4 @@ backend/package-lock.json
 /.nuxt
 /.next
 out/
+backend/uploads/*

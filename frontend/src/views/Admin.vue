@@ -1,3 +1,5 @@
+<!-- frontend/src/views/Admin.vue -->
+
 <template>
   <v-container>
     <h1>Administration</h1>
@@ -8,8 +10,41 @@
     </v-tabs>
 
     <v-tabs-items v-model="tab">
+      <!-- Ajouter une Actualité -->
+      <v-tab-item :value="0">
+        <v-card class="pa-4">
+          <v-form ref="newsForm" @submit.prevent="addNews">
+            <v-text-field
+              v-model="newsTitle"
+              label="Titre"
+              :rules="[v => !!v || 'Titre requis']"
+              required
+            ></v-text-field>
+            <v-textarea
+              v-model="newsContent"
+              label="Contenu"
+              :rules="[v => !!v || 'Contenu requis']"
+              required
+            ></v-textarea>
+            <!-- Replace image_url text field with file input -->
+            <v-file-input
+              v-model="newsImage"
+              label="Image"
+              accept="image/*"
+              :rules="[v => !!v || 'Image requise']"
+              required
+              prepend-icon="mdi-image"
+            ></v-file-input>
+            <v-btn type="submit" color="success" :loading="loading">Ajouter</v-btn>
+          </v-form>
+          <v-alert v-if="newsMessage" :type="newsError ? 'error' : 'success'" class="mt-4">
+            {{ newsMessage }}
+          </v-alert>
+        </v-card>
+      </v-tab-item>
+
       <!-- Gestion des Utilisateurs -->
-      <v-tab-item :value="0" v-if="tab === 1">
+      <v-tab-item :value="1">
         <v-card class="pa-4">
           <v-btn color="primary" class="mb-4" @click="fetchUsers">Charger les utilisateurs</v-btn>
           <v-alert v-if="userMessage" :type="userError ? 'error' : 'success'" class="mt-4">
@@ -27,37 +62,22 @@
           </v-data-table>
         </v-card>
       </v-tab-item>
-
-      <!-- Ajouter une Actualité -->
-      <v-tab-item :value="1" v-if="tab === 0">
-        <v-card class="pa-4">
-          <v-form ref="newsForm" @submit.prevent="addNews">
-            <v-text-field
-              v-model="newsTitle"
-              label="Titre"
-              :rules="[v => !!v || 'Titre requis']"
-              required
-            ></v-text-field>
-            <v-textarea
-              v-model="newsContent"
-              label="Contenu"
-              :rules="[v => !!v || 'Contenu requis']"
-              required
-            ></v-textarea>
-            <v-text-field
-              v-model="newsImage"
-              label="URL de l'image"
-              :rules="[v => !!v || 'URL de l\'image requise', v => validURL(v) || 'URL invalide']"
-              required
-            ></v-text-field>
-            <v-btn type="submit" color="success" :loading="loading">Ajouter</v-btn>
-          </v-form>
-          <v-alert v-if="newsMessage" :type="newsError ? 'error' : 'success'" class="mt-4">
-            {{ newsMessage }}
-          </v-alert>
-        </v-card>
-      </v-tab-item>
     </v-tabs-items>
+    
+    <!-- Confirmation Dialog for Deletion -->
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-card-title class="headline">Confirmer la Suppression</v-card-title>
+        <v-card-text>
+          Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ selectedUser?.username }}</strong> ?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">Annuler</v-btn>
+          <v-btn color="red darken-1" text @click="deleteUser">Supprimer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -82,7 +102,7 @@ export default {
       userError: false,
       newsTitle: "",
       newsContent: "",
-      newsImage: "",
+      newsImage: null, // Changed from string to File object
       newsMessage: "",
       newsError: false,
       loading: false,
@@ -148,16 +168,18 @@ export default {
       this.newsError = false;
       this.loading = true;
       try {
+        const formData = new FormData();
+        formData.append('title', this.newsTitle);
+        formData.append('content', this.newsContent);
+        formData.append('image', this.newsImage); // 'image' matches multer's upload.single('image')
+
         await axios.post(
           "/api/news",
-          {
-            title: this.newsTitle,
-            content: this.newsContent,
-            image_url: this.newsImage,
-          },
+          formData,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
+              'Content-Type': 'multipart/form-data', // Important for file uploads
             },
           }
         );
@@ -165,7 +187,7 @@ export default {
         this.newsError = false;
         this.newsTitle = "";
         this.newsContent = "";
-        this.newsImage = "";
+        this.newsImage = null;
       } catch (err) {
         console.error("Erreur lors de l'ajout de l'actualité :", err);
         this.newsMessage =
@@ -178,3 +200,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h1 {
+  margin-bottom: 20px;
+}
+
+.v-file-input {
+  margin-bottom: 20px;
+}
+</style>
