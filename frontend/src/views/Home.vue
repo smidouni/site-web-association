@@ -118,7 +118,7 @@ export default {
           id: 1,
           name: "Samy Midouni",
           role: "Président",
-          description: "Sami est en charge de la gestion de l'association.",
+          description: "Samy est en charge de la gestion de l'association.",
           image: "./assets/alice.jpg",
         },
         {
