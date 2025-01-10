@@ -29,7 +29,7 @@
         </p>
       </v-col>
       <v-col cols="12" md="6">
-        <img src="./images/comming_soon.jpg" alt="IM Team" class="w-100 section-image" />
+        <img src="./team1.avif" alt="IM Team" class="w-100 section-image" />
       </v-col>
     </v-row>
 
