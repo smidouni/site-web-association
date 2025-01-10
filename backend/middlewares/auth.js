@@ -1,3 +1,5 @@
+// backend/middlewares/auth.js
+
 const pool = require("../config/db");
 
 // Middleware pour authentifier le token

@@ -2,18 +2,29 @@
 
 const express = require("express");
 const { authenticateToken, authorizeRole } = require("../middlewares/auth");
-const { loginUser, deleteUser } = require("../controllers/users");
+const {
+  loginUser,
+  deleteUser,
+  getAllUsers,
+  createUser,
+  updateUser,
+} = require("../controllers/users");
 
 const router = express.Router();
 
-router.post("/login", loginUser); // User login
+// Connexion de l'utilisateur
+router.post("/login", loginUser);
 
-// Route pour récupérer les informations de l'utilisateur connecté (admin uniquement)
-router.get("/", authenticateToken, authorizeRole("admin"), async (req, res) => {
-  res.json({ message: "Accès autorisé", user: req.user });
-});
+// Récupérer tous les utilisateurs (admin uniquement)
+router.get("/", authenticateToken, authorizeRole("admin"), getAllUsers);
 
-// Route pour supprimer un utilisateur par ID (admin uniquement)
+// Créer un nouvel utilisateur (admin uniquement)
+router.post("/", authenticateToken, authorizeRole("admin"), createUser);
+
+// Mettre à jour un utilisateur par ID (admin uniquement)
+router.put("/:id", authenticateToken, authorizeRole("admin"), updateUser);
+
+// Supprimer un utilisateur par ID (admin uniquement)
 router.delete("/:id", authenticateToken, authorizeRole("admin"), deleteUser);
 
 module.exports = router;

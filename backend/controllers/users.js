@@ -77,4 +77,106 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, authenticateToken, deleteUser };
+// Récupérer tous les utilisateurs (admin uniquement)
+const getAllUsers = async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, username, role, created_at FROM users"
+    );
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Créer un nouvel utilisateur (admin uniquement)
+const createUser = async (req, res) => {
+  const { username, password, role } = req.body;
+
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Nom d'utilisateur et mot de passe requis." });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10); // Niveau de salage 10
+
+    const [result] = await pool.query(
+      "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+      [username, hashedPassword, role || "user"]
+    );
+
+    res
+      .status(201)
+      .json({
+        message: "Utilisateur créé avec succès.",
+        userId: result.insertId,
+      });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(409).json({ message: "Le nom d'utilisateur est déjà pris." });
+    } else {
+      res.status(500).json({ error: err.message });
+    }
+  }
+};
+
+// Mettre à jour un utilisateur par ID (admin uniquement)
+const updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const { username, role, password } = req.body;
+
+  if (!username && !role && !password) {
+    return res.status(400).json({
+      message: "Au moins un champ doit être fourni pour la mise à jour.",
+    });
+  }
+
+  let updateFields = [];
+  let values = [];
+
+  if (username) {
+    updateFields.push("username = ?");
+    values.push(username);
+  }
+  if (role) {
+    updateFields.push("role = ?");
+    values.push(role);
+  }
+  if (password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    updateFields.push("password = ?");
+    values.push(hashedPassword);
+  }
+
+  values.push(userId);
+
+  try {
+    const [result] = await pool.query(
+      `UPDATE users SET ${updateFields.join(", ")} WHERE id = ?`,
+      values
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    res.status(200).json({ message: "Utilisateur mis à jour avec succès." });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(409).json({ message: "Le nom d'utilisateur est déjà pris." });
+    } else {
+      res.status(500).json({ error: err.message });
+    }
+  }
+};
+
+module.exports = {
+  loginUser,
+  authenticateToken,
+  deleteUser,
+  getAllUsers,
+  createUser,
+  updateUser,
+};
