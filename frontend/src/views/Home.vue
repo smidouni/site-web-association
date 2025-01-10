@@ -1,5 +1,3 @@
-<!-- frontend/src/views/Home.vue -->
-
 <template>
   <v-container>
     <!-- Section Informatique et Mobilité -->
@@ -31,7 +29,7 @@
         </p>
       </v-col>
       <v-col cols="12" md="6">
-        <img :src="teamImage" alt="IM Team" class="w-100 section-image" />
+        <img :src="team1Image" alt="IM Team" class="w-100 section-image" />
       </v-col>
     </v-row>
 
@@ -40,9 +38,7 @@
     <v-row>
       <v-col cols="12" md="3" v-for="member in members" :key="member.id">
         <v-card class="mb-4 equal-height-card d-flex flex-column">
-          <!-- Image -->
           <v-img :src="member.image" :alt="member.name" height="150px"></v-img>
-          <!-- Content -->
           <v-card-title>{{ member.name }}</v-card-title>
           <v-card-subtitle>{{ member.role }}</v-card-subtitle>
           <v-card-text class="flex-grow-1">
@@ -53,47 +49,66 @@
     </v-row>
 
     <!-- Section Actualités -->
-    <h2 class="mt-12">Actualités</h2>
-    <v-progress-circular
-      v-if="loading"
-      indeterminate
-      color="primary"
-      size="64"
-      class="my-8"
-    ></v-progress-circular>
+    <h2 class="mt-12 section-title">Actualités</h2>
 
-    <v-carousel
-      v-else
-      hide-delimiters
-      show-arrows="hover"
-      class="mt-4"
-    >
-      <v-carousel-item
-        v-for="news in newsItems"
-        :key="news.id"
-        :src="news.image_url"
-        cover
-      >
-        <v-sheet
-          color="rgba(0, 0, 0, 0.5)"
-          height="100%"
-          class="d-flex flex-column justify-end pa-4"
+    <!-- News Carousel -->
+    <div class="news-carousel">
+      <v-btn icon @click="prevCard">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+
+      <div class="news-cards">
+        <v-card
+          v-for="(news, index) in visibleNews"
+          :key="news.id"
+          class="news-card"
+          elevation="3"
+          @click="viewNews(news)"
         >
-          <v-card-title class="white--text">{{ news.title }}</v-card-title>
-          <v-card-text class="white--text">
-            {{ truncateContent(news.content) }}
+          <v-img
+            :src="news.image_url"
+            height="200px"
+            class="rounded-t"
+            alt="News Image"
+          ></v-img>
+          <v-card-text>
+            <div class="news-date">{{ formatDate(news.date) }}</div>
+            <h3 class="news-title">{{ news.title }}</h3>
+            <p class="news-content">
+              {{ truncateContent(news.content) }}
+            </p>
           </v-card-text>
-          <v-btn
-            color="primary"
-            @click="viewNews(news.id)"
-            class="mt-2"
-          >
-            Lire la suite
-          </v-btn>
-          <Comments :newsId="news.id" />
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
+          <v-card-actions class="justify-center">
+            <v-btn color="primary" depressed @click.stop="viewNews(news)">
+              Lire la suite
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
+
+      <v-btn icon @click="nextCard">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </div>
+
+    <!-- News Modal -->
+    <v-dialog v-model="showNewsModal" max-width="600px">
+      <v-card>
+        <v-card-title>{{ selectedNews?.title }}</v-card-title>
+        <v-card-text>
+          <v-img
+            :src="selectedNews?.image_url"
+            height="300px"
+            alt="News Image"
+            class="mb-4"
+          ></v-img>
+          <p>{{ selectedNews?.content }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" text @click="closeNewsModal">Fermer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-alert v-if="error" type="error" class="mt-4">
       {{ error }}
@@ -103,99 +118,188 @@
 
 <script>
 import axios from "axios";
-import Comments from "../components/Comments.vue";
-import fstImage from '@/assets/fst.jpg'; // Import fst.jpg
-import team1Image from '@/assets/team1.avif'; // Import team1.avif
-import placeholderAvatar from '@/assets/placeholder-avatar.jpg'; // Import placeholder
+import fstImage from "@/assets/fst.jpg"; // Import fst.jpg
+import team1Image from "@/assets/team1.avif"; // Import team1.avif
+import placeholderAvatar from "@/assets/placeholder-avatar.jpg"; // Import placeholder
 
 export default {
   name: "Home",
-  components: {
-    Comments,
-  },
   data() {
     return {
-      newsItems: [],
-      loading: false,
-      error: null,
+      newsItems: [
+        {
+          id: 1,
+          title: "La révolution de l'IA",
+          content: "Plongez dans l'impact de l'intelligence artificielle.",
+          image_url: "https://via.placeholder.com/300x200",
+          date: "2025-01-10",
+        },
+        {
+          id: 2,
+          title: "Hackathon 2024",
+          content: "Participez à notre hackathon et collaborez avec des experts.",
+          image_url: "https://via.placeholder.com/300x200",
+          date: "2025-01-15",
+        },
+        {
+          id: 3,
+          title: "Conférence IoT",
+          content: "Apprenez les nouvelles tendances de l'IoT.",
+          image_url: "https://via.placeholder.com/300x200",
+          date: "2025-01-20",
+        },
+        {
+          id: 4,
+          title: "Atelier Cloud Computing",
+          content: "Introduction pratique au cloud computing.",
+          image_url: "https://via.placeholder.com/300x200",
+          date: "2025-02-01",
+        },
+      ],
       members: [
         {
           id: 1,
           name: "Samy Midouni",
           role: "Président",
           description: "Sami est en charge de la gestion de l'association.",
-          image: placeholderAvatar, // Use placeholder
+          image: placeholderAvatar,
         },
         {
           id: 2,
           name: "Badr Boukries",
           role: "Trésorier",
           description: "Badr gère les finances de l'association.",
-          image: placeholderAvatar, // Use placeholder
+          image: placeholderAvatar,
         },
         {
           id: 3,
           name: "Mehdi Kaidi",
           role: "Secrétaire",
           description: "Mehdi s'occupe de l'administration.",
-          image: placeholderAvatar, // Use placeholder
+          image: placeholderAvatar,
         },
         {
           id: 4,
           name: "Romain Broutin",
           role: "Responsable événementiel",
           description: "Romain organise les événements de l'association.",
-          image: placeholderAvatar, // Use placeholder
+          image: placeholderAvatar,
         },
       ],
-      fstImage, // Assign the imported fst.jpg
-      teamImage: team1Image, // Assign the imported team1.avif
+      currentIndex: 0,
+      showNewsModal: false,
+      selectedNews: null,
+      fstImage,
+      team1Image,
     };
   },
-  mounted() {
-    this.fetchNews();
+  computed: {
+    visibleNews() {
+      const visible = [];
+      for (let i = 0; i < 3; i++) {
+        const index = (this.currentIndex + i) % this.newsItems.length;
+        visible.push(this.newsItems[index]);
+      }
+      return visible;
+    },
   },
   methods: {
-    async fetchNews() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const response = await axios.get("/api/news");
-        this.newsItems = response.data;
-      } catch (err) {
-        this.error = "Erreur lors du chargement des actualités.";
-        console.error(err);
-      } finally {
-        this.loading = false;
-      }
+    nextCard() {
+      this.currentIndex = (this.currentIndex + 1) % this.newsItems.length;
+    },
+    prevCard() {
+      this.currentIndex =
+        (this.currentIndex - 1 + this.newsItems.length) %
+        this.newsItems.length;
     },
     truncateContent(content) {
-      const maxLength = 150;
+      const maxLength = 100;
       return content.length > maxLength
         ? content.substring(0, maxLength) + "..."
         : content;
     },
-    viewNews(newsId) {
-      this.$router.push(`/news/${newsId}`);
+    formatDate(date) {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString("fr-FR", options);
+    },
+    viewNews(news) {
+      this.selectedNews = news;
+      this.showNewsModal = true;
+    },
+    closeNewsModal() {
+      this.showNewsModal = false;
+      this.selectedNews = null;
     },
   },
 };
 </script>
 
 <style scoped>
-/* Section Styling */
-.im-section {
-  align-items: center;
-}
-
 .section-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-.content-section {
-  padding: 20px;
+.news-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.news-cards {
+  display: flex;
+  gap: 16px;
+}
+
+.news-card {
+  flex: 0 0 300px;
+  border-radius: 12px;
+  transition: transform 0.2s;
+  background: #fff;
+}
+
+.news-card:hover {
+  transform: scale(1.05);
+}
+
+.news-card .rounded-t {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.news-date {
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.news-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.news-content {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.v-btn[icon] {
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  color: #555;
+  height: 40px;
+  width: 40px;
+}
+
+.v-btn[icon]:hover {
+  background-color: #e0e0e0;
 }
 
 .section-image {
@@ -203,35 +307,7 @@ export default {
   object-fit: cover;
 }
 
-/* Membres Section */
 .equal-height-card {
-  height: 100%; /* Ensure all cards stretch to the same height */
-}
-
-.flex-grow-1 {
-  flex-grow: 1; /* Ensure text expands to fill the available space */
-}
-
-.v-card {
-  display: flex;
-  flex-direction: column; /* Align content vertically */
-}
-
-.v-card-title,
-.v-card-subtitle {
-  text-align: center;
-}
-
-/* Carousel Item Styling */
-.v-carousel-item {
-  position: relative;
-}
-
-.v-sheet {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.white--text {
-  color: white !important;
+  height: 100%;
 }
 </style>

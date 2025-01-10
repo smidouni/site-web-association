@@ -1,23 +1,17 @@
 // frontend/src/router/index.js
 
 import { createRouter, createWebHistory } from "vue-router";
-import { authState } from "../auth"; // Importer l'état d'authentification réactif
 
 // Import des vues
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Admin from "../views/Admin.vue";
 import Vote from "../views/Vote.vue";
-import Inscription from "../views/Inscription.vue"; // Import Inscription view
+import Inscription from "../views/Inscription.vue"; // Import the Inscription view
 
 const routes = [
   { path: "/", name: "Home", component: Home },
-  {
-    path: "/login",
-    name: "Login",
-    component: Login,
-    meta: { guest: true }, // Ajouter le meta field 'guest'
-  },
+  { path: "/login", name: "Login", component: Login },
   {
     path: "/admin",
     name: "Admin",
@@ -31,7 +25,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/inscription", // New route for Inscription
+    path: "/inscription", // Add the route for Inscription
     name: "Inscription",
     component: Inscription,
   },
@@ -51,15 +45,12 @@ const router = createRouter({
 
 // Navigation Guards
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!authState.token; // Utiliser l'état réactif
-  const role = authState.role;
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
-  if (to.meta.requiresAuth && !isLoggedIn) {
+  if (to.meta.requiresAuth && !token) {
     next({ name: "Login" });
   } else if (to.meta.requiresAdmin && role !== "admin") {
-    next({ name: "Home" });
-  } else if (to.meta.guest && isLoggedIn) {
-    // Si la route est réservée aux invités et que l'utilisateur est connecté
     next({ name: "Home" });
   } else {
     next();
