@@ -1,9 +1,11 @@
+<!-- frontend/src/views/Home.vue -->
+
 <template>
   <v-container>
     <!-- Section Informatique et Mobilité -->
     <v-row class="im-section">
       <v-col cols="12" md="6">
-        <img src="./fst.jpg" alt="IM Building" class="w-100 section-image" />
+        <img :src="fstImage" alt="IM Building" class="w-100 section-image" />
       </v-col>
       <v-col cols="12" md="6" class="content-section">
         <h3 class="section-title">Qu'est-ce que l'IM ?</h3>
@@ -29,7 +31,7 @@
         </p>
       </v-col>
       <v-col cols="12" md="6">
-        <img src="./team1.avif" alt="IM Team" class="w-100 section-image" />
+        <img :src="teamImage" alt="IM Team" class="w-100 section-image" />
       </v-col>
     </v-row>
 
@@ -39,7 +41,7 @@
       <v-col cols="12" md="3" v-for="member in members" :key="member.id">
         <v-card class="mb-4 equal-height-card d-flex flex-column">
           <!-- Image -->
-          <v-img :src="member.image" alt="member.name" height="150px"></v-img>
+          <v-img :src="member.image" :alt="member.name" height="150px"></v-img>
           <!-- Content -->
           <v-card-title>{{ member.name }}</v-card-title>
           <v-card-subtitle>{{ member.role }}</v-card-subtitle>
@@ -102,6 +104,9 @@
 <script>
 import axios from "axios";
 import Comments from "../components/Comments.vue";
+import fstImage from '@/assets/fst.jpg'; // Import fst.jpg
+import team1Image from '@/assets/team1.avif'; // Import team1.avif
+import placeholderAvatar from '@/assets/placeholder-avatar.jpg'; // Import placeholder
 
 export default {
   name: "Home",
@@ -119,30 +124,32 @@ export default {
           name: "Samy Midouni",
           role: "Président",
           description: "Sami est en charge de la gestion de l'association.",
-          image: "./assets/alice.jpg",
+          image: placeholderAvatar, // Use placeholder
         },
         {
           id: 2,
           name: "Badr Boukries",
           role: "Trésorier",
           description: "Badr gère les finances de l'association.",
-          image: "./assets/jean.jpg",
+          image: placeholderAvatar, // Use placeholder
         },
         {
           id: 3,
           name: "Mehdi Kaidi",
           role: "Secrétaire",
           description: "Mehdi s'occupe de l'administration.",
-          image: "./assets/sophie.jpg",
+          image: placeholderAvatar, // Use placeholder
         },
         {
           id: 4,
           name: "Romain Broutin",
           role: "Responsable événementiel",
           description: "Romain organise les événements de l'association.",
-          image: "./assets/paul.jpg",
+          image: placeholderAvatar, // Use placeholder
         },
       ],
+      fstImage, // Assign the imported fst.jpg
+      teamImage: team1Image, // Assign the imported team1.avif
     };
   },
   mounted() {
