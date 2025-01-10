@@ -3,7 +3,7 @@
     <!-- Section Informatique et Mobilité -->
     <v-row class="im-section">
       <v-col cols="12" md="6">
-        <img src="./fst.jpg" alt="IM Building" class="w-100 section-image" />
+        <img src="./images/fst.jpg" alt="IM Building" class="w-100 section-image" />
       </v-col>
       <v-col cols="12" md="6" class="content-section">
         <h3 class="section-title">Qu'est-ce que l'IM ?</h3>
@@ -29,7 +29,7 @@
         </p>
       </v-col>
       <v-col cols="12" md="6">
-        <img src="./team.jpg" alt="IM Team" class="w-100 section-image" />
+        <img src="./images/comming_soon.jpg" alt="IM Team" class="w-100 section-image" />
       </v-col>
     </v-row>
 
