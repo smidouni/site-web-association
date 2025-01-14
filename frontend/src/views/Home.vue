@@ -6,26 +6,19 @@
         <img :src="fstImage" alt="IM Building" class="w-100 section-image" />
       </v-col>
       <v-col cols="12" md="6" class="content-section">
-        <h3 class="section-title">Qu'est-ce que l'IM ?</h3>
+        <h3 class="section-title">Présentation des masters</h3>
         <p>
-          Le parcours Informatique et Mobilité (IM) forme des étudiants aux technologies modernes de l’informatique
-          mobile et connectée. Ce programme met l'accent sur le développement d’applications mobiles, les systèmes
-          embarqués, l’internet des objets (IoT), ainsi que les infrastructures cloud pour la gestion de données
-          distribuées. Les diplômés acquièrent une double compétence technique et pratique, adaptée aux besoins
-          des entreprises modernes.
+          Les masters Informatique et Mobilité (IM) et Ingénierie Mathématiques et Data Science (IMDS) forment des experts dans les domaines des technologies mobiles et des données. Le master IM se concentre sur le développement d'applications mobiles, les systèmes embarqués, l'IoT et les infrastructures cloud pour la gestion des données. Le master IMDS forme des spécialistes de l'analyse de données, des algorithmes et de l'intelligence artificielle, appliqués à des problématiques complexes.
         </p>
       </v-col>
     </v-row>
+    
 
     <v-row class="im-section mt-12">
       <v-col cols="12" md="6" class="content-section">
         <h3 class="section-title">Qui sommes-nous ?</h3>
         <p>
-          Nous sommes une association d'étudiants du Master 1 Informatique et Mobilité (IM). Notre objectif est de
-          promouvoir la collaboration, l’entraide et le développement personnel des étudiants dans ce domaine.
-          À travers des projets, des événements professionnels, et des activités sociales, nous favorisons une
-          atmosphère propice à la réussite académique et à l’épanouissement individuel. Rejoignez-nous pour découvrir
-          un univers où technologie et mobilité se rencontrent !
+          Nous sommes une association d'étudiants des masters Informatique et Mobilité (IM) et Ingénierie Mathématiques et Data Science (IMDS). Notre objectif est de promouvoir la collaboration, l’entraide et le développement personnel des étudiants dans ces deux domaines. À travers des projets, des événements professionnels, et des activités sociales, nous créons un environnement propice à la réussite académique et à l’épanouissement individuel. Rejoignez-nous pour découvrir un univers où technologies, mobilité et data science se rencontrent !
         </p>
       </v-col>
       <v-col cols="12" md="6">
