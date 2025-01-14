@@ -61,6 +61,9 @@ export default {
 }
 
 .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 48px;
   height: 48px;
   margin-right: 12px;
